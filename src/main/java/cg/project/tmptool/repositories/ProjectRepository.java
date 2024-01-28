@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
-    @Override
-    Iterable<Project> findAllById(Iterable<Long> longs);
+//    @Override
+//    Iterable<Project> findAllById(Iterable<Long> longs);
+
+    // repositories works directly with JPA which can access DB by findBy + fieldName
+    Project findByProjectId(String projectId);
 }

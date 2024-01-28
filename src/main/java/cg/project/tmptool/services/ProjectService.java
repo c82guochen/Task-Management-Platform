@@ -20,7 +20,16 @@ public class ProjectService {
             // 这里可以用断点来查看exception的内容
             throw new ProjectIdException("Project ID '" + project.getProjectId().toUpperCase() + "' is already existed");
         }
-
     }
 
+    public Project findProjectById(String projectId) {
+        Project project = projectRepository.findByProjectId(projectId);
+
+        if (project == null) {
+            throw new ProjectIdException("Project ID '" + projectId.toUpperCase() + "' does not existed");
+
+        }
+
+        return projectRepository.findByProjectId((projectId));
+    }
 }
