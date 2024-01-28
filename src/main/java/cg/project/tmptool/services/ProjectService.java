@@ -1,6 +1,7 @@
 package cg.project.tmptool.services;
 
 import cg.project.tmptool.dto.Project;
+import cg.project.tmptool.exceptions.ProjectIdException;
 import cg.project.tmptool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,14 @@ public class ProjectService {
     private ProjectRepository projectRepository;
 
     public Project saveOrUpdateProject(Project project) {
-        return projectRepository.save(project);
+        try {
+            project.setProjectId(project.getProjectId().toUpperCase());
+            return projectRepository.save(project);
+        } catch (Exception e) {
+            // 这里可以用断点来查看exception的内容
+            throw new ProjectIdException("Project ID '" + project.getProjectId().toUpperCase() + "' is already existed");
+        }
+
     }
 
 }
