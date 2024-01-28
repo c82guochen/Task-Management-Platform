@@ -1,6 +1,7 @@
 package cg.project.tmptool.controller;
 
 import cg.project.tmptool.dto.Project;
+import cg.project.tmptool.services.MapValidationErrorService;
 import cg.project.tmptool.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,16 +23,18 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private MapValidationErrorService mapValidationErrorService;
+
     @PostMapping(value = "")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
+        // controller不做任何数据逻辑处理,只指派任务
+        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
 
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            result.getFieldErrors().forEach((e) -> errorMap.put(e.getField(), e.getDefaultMessage()));
-
-
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
+        if (errorMap != null) {
+            return errorMap;
         }
+
 
         Project newProject = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(newProject, HttpStatus.CREATED);
