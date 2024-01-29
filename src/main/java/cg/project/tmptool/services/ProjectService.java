@@ -20,7 +20,7 @@ public class ProjectService {
     public Project saveOrUpdateProject(Project project) {
         try {
             project.setProjectId(project.getProjectId().toUpperCase());
-
+            // 确定一个project是否已存在：查询数据库中id
             if (project.getId() == null) {
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
