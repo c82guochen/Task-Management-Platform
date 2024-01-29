@@ -1,5 +1,6 @@
 package cg.project.tmptool.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,8 +24,8 @@ public class Backlog {
     // OneToOne with Project
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_identifier", nullable = false)
+    @JsonIgnore
     private Project project;
-
 
     // OneToMany Tasks
 
