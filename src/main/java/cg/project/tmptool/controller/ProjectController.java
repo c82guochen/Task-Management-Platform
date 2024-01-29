@@ -41,4 +41,17 @@ public class ProjectController {
         Project project = projectService.findProjectById(projectId);
         return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
+
+    //    @GetMapping(value = "/all")
+//    public Iterable<Project> getAll() {
+//        return projectService.findAllProjects();
+//    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<?> getAll() {
+        Map<String, Iterable<Project>> map = new HashMap<>();
+        // We return an object here, like what we returned in above functions
+        map.put("data", projectService.findAllProjects());
+        return new ResponseEntity<Map<String, Iterable<Project>>>(map, HttpStatus.OK);
+    }
 }

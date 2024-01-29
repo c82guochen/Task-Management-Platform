@@ -12,4 +12,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
 
     // repositories works directly with JPA which can access DB by findBy + fieldName
     Project findByProjectId(String projectId);
+
+    @Override
+    Iterable<Project> findAll();
 }
