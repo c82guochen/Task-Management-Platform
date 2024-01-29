@@ -22,11 +22,8 @@ public class Project {
     @NotBlank(message = "Project Name is required")
     private String projectName;
 
-
-    // 除了Column以外所有的annotation都是JVM处理的，将Java语言转换成了sql语言
     @NotBlank(message = "Project Identifier is required")
     @Size(min = 4, max = 6, message = "Please use 4 to 6 characters")
-    // 但access DB这层是由JPA来处理的，没有annotation可以处理，只能customize exception
     @Column(updatable = false, unique = true)
     private String projectId;
 
@@ -45,6 +42,9 @@ public class Project {
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updateAt;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    private Backlog backlog;
+
     @PrePersist
     protected void onCreate() {
         this.createAt = new Date();
@@ -54,4 +54,6 @@ public class Project {
     protected void onUpdate() {
         this.updateAt = new Date();
     }
+
+
 }
