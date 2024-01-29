@@ -22,11 +22,13 @@ public class ProjectService {
             project.setProjectId(project.getProjectId().toUpperCase());
             // 确定一个project是否已存在：查询数据库中id
             if (project.getId() == null) {
+                // 若还没有存至数据库中，代表该project为新建的，为其初始化backlog
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
                 backlog.setProject(project);
                 backlog.setProjectId(project.getProjectId().toUpperCase());
             } else {
+                // 若已存在，在PUT过程中将原本的backlog存至新数据中
                 project.setBacklog(backlogRepository.findByProjectId(project.getProjectId()));
             }
 
