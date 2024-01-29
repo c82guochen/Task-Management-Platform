@@ -63,7 +63,7 @@ public class ProjectController {
     }
 
     @PutMapping(value = "")
-    // PUT操作的数据一定要带上id（数据库里的id），不然会被默认成POST操作
+    // 在进行PUT操作的数据一定要带上id（数据库里的id），不然会被默认成POST操作
     public ResponseEntity<?> updateNewProject(@Valid @RequestBody Project project, BindingResult result) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
