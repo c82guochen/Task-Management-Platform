@@ -54,4 +54,11 @@ public class ProjectController {
         map.put("data", projectService.findAllProjects());
         return new ResponseEntity<Map<String, Iterable<Project>>>(map, HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/{projectId}")
+    public ResponseEntity<?> deleteProjectByProjectId(@PathVariable String projectId) {
+        projectService.deleteProjectByProjectId(projectId);
+        // 因为此函数没有返回值，所以直接返回我们定义的值
+        return new ResponseEntity<String>("Project ID '" + projectId.toUpperCase() + "' was deleted", HttpStatus.OK);
+    }
 }
