@@ -61,4 +61,17 @@ public class ProjectController {
         // 因为此函数没有返回值，所以直接返回我们定义的值
         return new ResponseEntity<String>("Project ID '" + projectId.toUpperCase() + "' was deleted", HttpStatus.OK);
     }
+
+    @PutMapping(value = "")
+    public ResponseEntity<?> updateNewProject(@Valid @RequestBody Project project, BindingResult result) {
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
+
+        if (errorMap != null) {
+            return errorMap;
+        }
+
+        Project newProject = projectService.saveOrUpdateProject(project);
+        return new ResponseEntity<Project>(newProject, HttpStatus.CREATED);
+    }
 }

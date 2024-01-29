@@ -14,8 +14,14 @@ public class ProjectService {
 
     public Project saveOrUpdateProject(Project project) {
         try {
-            project.setProjectId(project.getProjectId().toUpperCase());
-            return projectRepository.save(project);
+            Project existedProject = projectRepository.findByProjectId(project.getProjectId());
+            if (existedProject == null){
+                project.setProjectId(project.getProjectId().toUpperCase());
+                return projectRepository.save(project);
+            }
+            existedProject.setProjectName(project.getProjectName());
+            existedProject.setDescription(project.getDescription());
+            return projectRepository.save(existedProject);
         } catch (Exception e) {
             // 这里可以用断点来查看exception的内容
             throw new ProjectIdException("Project ID '" + project.getProjectId().toUpperCase() + "' is already existed");
