@@ -1,5 +1,6 @@
 package cg.project.tmptool.services;
 
+import cg.project.tmptool.dto.Backlog;
 import cg.project.tmptool.dto.Project;
 import cg.project.tmptool.exceptions.ProjectIdException;
 import cg.project.tmptool.repositories.ProjectRepository;
@@ -17,10 +18,17 @@ public class ProjectService {
             Project existedProject = projectRepository.findByProjectId(project.getProjectId());
             if (existedProject == null){
                 project.setProjectId(project.getProjectId().toUpperCase());
+                if (project.getId() == null) {
+                    Backlog backlog = new Backlog();
+                    project.setBacklog(backlog);
+                    backlog.setProject(project);
+                    backlog.setProjectId(project.getProjectId().toUpperCase());
+                }
                 return projectRepository.save(project);
             }
             existedProject.setProjectName(project.getProjectName());
             existedProject.setDescription(project.getDescription());
+            existedProject.setBacklog(project.getBacklog());
             return projectRepository.save(existedProject);
         } catch (Exception e) {
             // 这里可以用断点来查看exception的内容
