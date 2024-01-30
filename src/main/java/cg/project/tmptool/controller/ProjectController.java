@@ -59,7 +59,7 @@ public class ProjectController {
     public ResponseEntity<?> deleteProjectByProjectId(@PathVariable String projectId) {
         projectService.deleteProjectByProjectId(projectId);
         // 因为此函数没有返回值，所以直接返回我们定义的值
-        return new ResponseEntity<String>("Project ID '" + projectId.toUpperCase() + "' was deleted", HttpStatus.OK);
+        return new ResponseEntity<String>("Project ID " + projectId.toUpperCase() + " was deleted", HttpStatus.OK);
     }
 
     @PutMapping(value = "")

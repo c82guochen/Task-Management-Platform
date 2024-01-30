@@ -41,10 +41,35 @@ public class BacklogController {
         return new ResponseEntity<List<Task>>(taskService.findTaskByProjectId(projectId), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{projectId}/{taskId}")
-    public ResponseEntity<?> getTaskByProjectSequence(@PathVariable String projectId, @PathVariable String taskId) {
-        Task task = taskService.findTaskByProjectSequence(projectId, taskId);
+    @GetMapping(value = "/{projectId}/{taskSequence}")
+    public ResponseEntity<?> getTaskByProjectSequence(@PathVariable String projectId, @PathVariable String taskSequence) {
+        Task task = taskService.findTaskByProjectSequence(projectId, taskSequence);
         return new ResponseEntity<Task>(task, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{projectId}/{projectSequence}")
+    public ResponseEntity<?> updateTaskByProjectSequence(@Valid @RequestBody Task task, BindingResult result, @PathVariable String projectId, @PathVariable String projectSequence) {
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
+
+        if (errorMap != null) {
+            return errorMap;
+        }
+
+        Task updatedTask = taskService.updateTaskByProjectSequence(task, projectId, projectSequence);
+        return new ResponseEntity<Task>(updatedTask, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{projectId}")
+    public ResponseEntity<?> deleteTaskListByProjectId(@PathVariable String projectId) {
+        taskService.deleteAllTaskByProjectId(projectId);
+        return new ResponseEntity<String>("All tasks in Project ID " + projectId.toUpperCase() + " was deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{projectId}/{taskSequence}")
+    public ResponseEntity<?> deleteTaskByProjectSequence(@PathVariable String projectId, @PathVariable String taskSequence) {
+        taskService.deleteTaskByProjectSequence(projectId, taskSequence);
+        return new ResponseEntity<String>("Task sequence " + taskSequence.toUpperCase() + " in Project ID " + projectId.toUpperCase() + " was deleted", HttpStatus.OK);
 
     }
 }
