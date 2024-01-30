@@ -4,6 +4,7 @@ import cg.project.tmptool.dto.Backlog;
 import cg.project.tmptool.dto.Task;
 import cg.project.tmptool.repositories.BacklogRepository;
 import cg.project.tmptool.repositories.TaskRepository;
+import cg.project.tmptool.exceptions.ProjectNotFoundException;
 import org.hibernate.internal.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,28 +21,32 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     public Task addProjectTask(String projectId, Task task) {
-        Backlog backlog = backlogRepository.findByProjectId(projectId);
-        task.setBacklog(backlog);
+        try {
+            Backlog backlog = backlogRepository.findByProjectId(projectId);
+            task.setBacklog(backlog);
 
-        Integer backlogSequence = backlog.getTaskSequence();
-        backlogSequence++;
-        backlog.setTaskSequence(backlogSequence);
+            Integer backlogSequence = backlog.getTaskSequence();
+            backlogSequence++;
+            backlog.setTaskSequence(backlogSequence);
 
-        task.setProjectSequence(projectId + "-" + backlogSequence);
-        task.setProjectId(projectId);
+            task.setProjectSequence(projectId + "-" + backlogSequence);
+            task.setProjectId(projectId);
 
-        if (task.getPriority() == null) {
-            task.setPriority(3);
+            if (task.getPriority() == null) {
+                task.setPriority(3);
+            }
+
+            if (StringHelper.isEmpty(task.getStatus())) {
+                task.setStatus("TO_DO");
+            }
+
+            return taskRepository.save(task);
+        } catch (Exception e) {
+            throw new ProjectNotFoundException("Project " + projectId + " does not exist");
         }
-        // StringHelper是自带的
-        if (StringHelper.isEmpty(task.getStatus())) {
-            task.setStatus("TO_DO");
-        }
 
-        return taskRepository.save(task);
     }
 
-    // Because we JSONIgnore Backlog in Project, an url should be provided for checking all tasks
     public List<Task> findTaskByProjectId(String productId) {
         return taskRepository.findByProjectIdOrderByPriority(productId);
     }
