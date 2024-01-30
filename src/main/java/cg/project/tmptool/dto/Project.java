@@ -1,6 +1,7 @@
 package cg.project.tmptool.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,6 +46,8 @@ public class Project {
     private Date updateAt;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    // refactor the project and task to avoid returning details and lowering return speed
+    @JsonIgnore
     private Backlog backlog;
 
     @PrePersist
