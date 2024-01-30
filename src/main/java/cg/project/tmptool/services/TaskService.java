@@ -24,7 +24,7 @@ public class TaskService {
         try {
             Backlog backlog = backlogRepository.findByProjectId(projectId);
             task.setBacklog(backlog);
-
+            // 这里会出现nullpointerexception，就会被catch
             Integer backlogSequence = backlog.getTaskSequence();
             backlogSequence++;
             backlog.setTaskSequence(backlogSequence);
