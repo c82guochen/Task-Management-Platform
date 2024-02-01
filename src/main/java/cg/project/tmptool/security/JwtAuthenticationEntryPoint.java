@@ -1,7 +1,7 @@
 package cg.project.tmptool.security;
 
 import com.google.gson.Gson;
-import cg.project.tmptool.exceptions.InvalidLoginResponse;
+import cg.project.tmptool.exceptions.UserInvalidLoginResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        InvalidLoginResponse loginResponse = new InvalidLoginResponse();
+        UserInvalidLoginResponse loginResponse = new UserInvalidLoginResponse();
         String jsonLoginResponse = new Gson().toJson(loginResponse);
 
         response.setContentType("application/json");
