@@ -62,8 +62,8 @@ public class ProjectService {
         return projectRepository.findByProjectId((projectId));
     }
 
-    public Iterable<Project> findAllProjects() {
-        return projectRepository.findAll();
+    public Iterable<Project> findAllProjects(String username) {
+        return projectRepository.findAllByProjectOwner(username);
     }
 
     public void deleteProjectByProjectId(String projectId) {
