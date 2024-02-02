@@ -4,6 +4,7 @@ import cg.project.tmptool.dto.Backlog;
 import cg.project.tmptool.dto.Project;
 import cg.project.tmptool.dto.User;
 import cg.project.tmptool.exceptions.ProjectIdException;
+import cg.project.tmptool.exceptions.ProjectNotFoundException;
 import cg.project.tmptool.repositories.BacklogRepository;
 import cg.project.tmptool.repositories.ProjectRepository;
 import cg.project.tmptool.repositories.UserRepository;
@@ -51,12 +52,16 @@ public class ProjectService {
 
     }
 
-    public Project findProjectById(String projectId) {
+    public Project findProjectById(String projectId, String username) {
         Project project = projectRepository.findByProjectId(projectId);
 
         if (project == null) {
-            throw new ProjectIdException("Project ID '" + projectId.toUpperCase() + "' does not exist");
+            throw new ProjectIdException("Project ID '" + projectId.toUpperCase() + "' does not existed");
+        }
 
+        // User access restriction
+        if (!project.getProjectOwner().equals(username)) {
+            throw new ProjectNotFoundException("Project ID '" + projectId.toUpperCase() + "' not found in your account");
         }
 
         return projectRepository.findByProjectId((projectId));
