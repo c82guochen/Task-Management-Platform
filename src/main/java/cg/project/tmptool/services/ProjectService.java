@@ -2,9 +2,11 @@ package cg.project.tmptool.services;
 
 import cg.project.tmptool.dto.Backlog;
 import cg.project.tmptool.dto.Project;
+import cg.project.tmptool.dto.User;
 import cg.project.tmptool.exceptions.ProjectIdException;
 import cg.project.tmptool.repositories.BacklogRepository;
 import cg.project.tmptool.repositories.ProjectRepository;
+import cg.project.tmptool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,17 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
-    public Project saveOrUpdateProject(Project project) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public Project saveOrUpdateProject(Project project, String username) {
         try {
+            // Find the user
+            User user = userRepository.findByUsername(username);
+
+            project.setUser(user);
+            project.setProjectOwner(user.getUsername());
+
             project.setProjectId(project.getProjectId().toUpperCase());
             // 确定一个project是否已存在：查询数据库中id
             if (project.getId() == null) {

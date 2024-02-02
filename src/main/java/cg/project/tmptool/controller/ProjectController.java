@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ProjectController {
     private MapValidationErrorService mapValidationErrorService;
 
     @PostMapping(value = "")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result, Principal principal) {
         // controller不做任何数据逻辑处理,只指派任务
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
 
@@ -32,7 +33,7 @@ public class ProjectController {
             return errorMap;
         }
 
-        Project newProject = projectService.saveOrUpdateProject(project);
+        Project newProject = projectService.saveOrUpdateProject(project, principal.getName());
         return new ResponseEntity<Project>(newProject, HttpStatus.CREATED);
     }
 
@@ -64,7 +65,7 @@ public class ProjectController {
 
     @PutMapping(value = "")
     // 在进行PUT操作的数据一定要带上id（数据库里的id），不然会被默认成POST操作
-    public ResponseEntity<?> updateNewProject(@Valid @RequestBody Project project, BindingResult result) {
+    public ResponseEntity<?> updateNewProject(@Valid @RequestBody Project project, BindingResult result, Principal principal) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
 
@@ -72,7 +73,8 @@ public class ProjectController {
             return errorMap;
         }
 
-        Project newProject = projectService.saveOrUpdateProject(project);
+
+        Project newProject = projectService.saveOrUpdateProject(project, principal.getName());
         return new ResponseEntity<Project>(newProject, HttpStatus.CREATED);
     }
 }
