@@ -26,8 +26,8 @@ public class TaskService {
         try {
             Backlog backlog = backlogRepository.findByProjectId(projectId);
             task.setBacklog(backlog);
-            // 这里会出现nullpointerexception，就会被catch
             Integer backlogSequence = backlog.getTaskSequence();
+            // If it doesn't find a valid projectId, there will be a null pointer exception, then code jumps into catch statement
             backlogSequence++;
             backlog.setTaskSequence(backlogSequence);
 
@@ -37,7 +37,7 @@ public class TaskService {
             if (task.getPriority() == null) {
                 task.setPriority(3);
             }
-
+            // 采用StringHelper中的isEmpty函数检查task
             if (StringHelper.isEmpty(task.getStatus())) {
                 task.setStatus("TO_DO");
             }
@@ -51,6 +51,8 @@ public class TaskService {
 
     public List<Task> findTaskByProjectId(String productId) {
         return taskRepository.findByProjectIdOrderByPriority(productId);
+        //这里即使projectId为空，也只会返回一个empty list，符合逻辑，所以不需要throw exception
+        //所以要注意什么需要exception handler什么时候不需要，就和recursion代码什么时候是base case一样
     }
 
     public Task findTaskByProjectSequence(String projectId, String projectSequence) {
@@ -70,7 +72,7 @@ public class TaskService {
         // Step - 3 -> match the relationship
         if (!task.getProjectId().equals(projectId)) {
             throw new ProjectNotFoundException("Task " + projectSequence + " does not exist in the project: " + projectId);
-        }
+        } // 因为可能进行了task的移除和添加
         return task;
     }
 
